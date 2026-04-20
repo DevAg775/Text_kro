@@ -17,4 +17,4 @@ trim: true
 },{timestamps: true})
 
 
-module.exports = mongoose.Schema("messages",messageSchema)
+module.exports = mongoose.model("messages",messageSchema)

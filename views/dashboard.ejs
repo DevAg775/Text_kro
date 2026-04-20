@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>Welcome <%= user.username %></h1>
+
+  <form action="/create-room" method="POST">
+    <button type="submit">Create Room</button>
+  </form>
+
+  <hr>
+
+  <form action="/join-room" method="POST">
+    <input type="text" name="roomId" placeholder="Enter room ID" required />
+    <button type="submit">Join Room</button>
+  </form>
+
+  <br>
+  <a href="/logout">Logout</a>
+</body>
+</html>

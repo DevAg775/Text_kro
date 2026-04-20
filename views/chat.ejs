@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Room</title>
+</head>
+<body>
+  <h1>Room: <%= roomId %></h1>
+  <p>Logged in as: <%= user.username %></p>
+
+  <div id="chat-box" style="border:1px solid #000; height:300px; overflow-y:auto; margin-bottom:10px;"></div>
+
+  <input type="text" id="message" placeholder="Type message..." />
+  <button id="sendBtn">Send</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const roomId = "<%= roomId %>";
+    const userId = "<%= user._id %>";
+    const username = "<%= user.username %>";
+
+    const chatBox = document.getElementById("chat-box");
+    const messageInput = document.getElementById("message");
+    const sendBtn = document.getElementById("sendBtn");
+
+    socket.emit("join-room", { roomId, username });
+
+    socket.on("previous-messages", (messages) => {
+      chatBox.innerHTML = "";
+      messages.forEach(msg => {
+        const p = document.createElement("p");
+        p.textContent = msg.text;
+        chatBox.appendChild(p);
+      });
+    });
+
+    socket.on("user-joined", (data) => {
+      const p = document.createElement("p");
+      p.textContent = data.message;
+      chatBox.appendChild(p);
+    });
+
+    socket.on("receive-message", (data) => {
+      const p = document.createElement("p");
+      p.textContent = `${data.username}: ${data.text}`;
+      chatBox.appendChild(p);
+    });
+
+    sendBtn.addEventListener("click", () => {
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      socket.emit("send-message", {
+        roomId,
+        userId,
+        username,
+        text
+      });
+
+      messageInput.value = "";
+    });
+  </script>
+</body>
+</html>

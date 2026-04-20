@@ -10,5 +10,4 @@ try {
 }
 }
 
-
-module.exports(connectDb)
+module.exports = connectDb

@@ -5,8 +5,11 @@ const http = require("http");
 const path = require("path");
 const session = require("express-session");
 const { Server } = require("socket.io");
-const { connect } = require("http2");
+// const { connect } = require("http2");
+const authRoutes = require("./routes/auth")
+const roomRoutes = require("./routes/room")
 const connectDB = require("./config/connect")
+const Message = require("./models/message")
 
 const app = express();
 const server = http.createServer(app);
@@ -70,7 +73,6 @@ io.on("connection", (socket) => {
     console.log("User disconnected:", socket.id);
   });
 });
-
 
 server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
