@@ -10,7 +10,7 @@ router.get("/signup", (req,res)=>{
 
 router.post("/signup", async (req,res)=>{
     const { username, email , password} = req.body
-    console.log(req.body)
+    // console.log(req.body)
     const existingEmail = await User.findOne({ email })
     if (existingEmail) return res.send("Email already in use")
 
