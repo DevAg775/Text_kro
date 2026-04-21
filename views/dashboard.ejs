@@ -200,14 +200,14 @@
   <div class="main">
 
     <div class="welcome">
-      <p>Namaste 👋</p>
+      <p>Welcome 👋</p>
       <h1>Welcome, <span><%= user.username %></span></h1>
     </div>
 
     <!-- Create Room -->
     <div class="card">
-      <div class="card-title">🚀 Naya Room Banao</div>
-      <div class="card-desc">Ek naya chat room create karo aur doston ko invite karo.</div>
+      <div class="card-title">🚀 Create a New Room</div>
+      <div class="card-desc">Start a new chat room and invite your friends.</div>
       <form action="/create-room" method="POST">
         <button type="submit" class="btn-primary">+ Create Room</button>
       </form>
@@ -215,11 +215,11 @@
 
     <!-- Join Room -->
     <div class="card">
-      <div class="card-title">🔗 Room Join Karo</div>
-      <div class="card-desc">Kisi ke room mein join karo uska Room ID enter karke.</div>
+      <div class="card-title">🔗 Join a Room</div>
+      <div class="card-desc">Join an existing room by entering its Room ID.</div>
       <form action="/join-room" method="POST">
         <div class="input-row">
-          <input type="text" name="roomId" placeholder="Room ID daalo..." required />
+          <input type="text" name="roomId" placeholder="Enter Room ID..." required />
           <button type="submit" class="btn-secondary">Join →</button>
         </div>
       </form>
