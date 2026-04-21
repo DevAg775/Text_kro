@@ -62,4 +62,8 @@ router.get("/logout", (req, res) => {
   });
 });
 
+router.get("/", (req, res) => {
+  if (req.session.user) return res.redirect("/dashboard");
+  res.render("home");
+});
 module.exports = router;

@@ -51,7 +51,10 @@ io.on("connection", (socket) => {
       message: `${username} joined the room`
     });
 
-    const oldMessages = await Message.find({ roomId }).sort({ createdAt: 1 }).limit(50);
+    const oldMessages = await Message.find({ roomId })
+    .sort({ createdAt: 1 })
+    .limit(50)
+    .populate("sender", "username");
     socket.emit("previous-messages", oldMessages);
   });
 

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Textkro</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0a0a0f;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 8s ease-in-out infinite;
+      z-index: 0;
+    }
+    .blob1 { width: 500px; height: 500px; background: #6c63ff; top: -100px; left: -100px; animation-delay: 0s; }
+    .blob2 { width: 400px; height: 400px; background: #ff6b9d; top: 50%; right: -100px; animation-delay: 3s; }
+    .blob3 { width: 350px; height: 350px; background: #48cae4; bottom: -100px; left: 30%; animation-delay: 5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-30px) scale(1.05); }
+    }
+
+    /* Navbar */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c63ff, #48cae4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links { display: flex; gap: 1rem; }
+
+    .btn-nav {
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(108, 99, 255, 0.5);
+      color: #6c63ff;
+    }
+    .btn-outline:hover { background: rgba(108, 99, 255, 0.1); }
+
+    .btn-filled {
+      background: linear-gradient(135deg, #6c63ff, #48cae4);
+      color: white;
+    }
+    .btn-filled:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(108,99,255,0.4); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(108, 99, 255, 0.15);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      color: #a29bff;
+      padding: 6px 18px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 .gradient {
+      background: linear-gradient(135deg, #6c63ff, #ff6b9d, #48cae4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200%;
+      animation: gradientShift 4s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0%; }
+      50% { background-position: 100%; }
+      100% { background-position: 0%; }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #888;
+      max-width: 500px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #6c63ff, #48cae4);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 8px 30px rgba(108,99,255,0.3);
+    }
+    .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(108,99,255,0.5); }
+
+    .btn-hero-secondary {
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+    .btn-hero-secondary:hover { background: rgba(255,255,255,0.05); transform: translateY(-3px); }
+
+    /* Chat preview */
+    .chat-preview {
+      position: relative;
+      z-index: 5;
+      max-width: 500px;
+      margin: 4rem auto;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 1.5rem;
+      backdrop-filter: blur(20px);
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .room-dot { width: 10px; height: 10px; background: #48cae4; border-radius: 50%; animation: pulse 2s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .room-name { font-size: 0.9rem; color: #888; }
+
+    .message {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0.8rem;
+    }
+
+    .msg-bubble {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      max-width: 80%;
+      line-height: 1.4;
+    }
+
+    .msg-left .msg-bubble { background: rgba(108,99,255,0.2); border-bottom-left-radius: 4px; align-self: flex-start; }
+    .msg-right .msg-bubble { background: linear-gradient(135deg, #6c63ff, #48cae4); border-bottom-right-radius: 4px; align-self: flex-end; }
+
+    .msg-name { font-size: 0.7rem; color: #555; margin-bottom: 3px; padding: 0 4px; }
+    .msg-right .msg-name { text-align: right; }
+
+    /* Features */
+    .features {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem 4rem 6rem;
+      flex-wrap: wrap;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      width: 200px;
+      text-align: center;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(108,99,255,0.3);
+      background: rgba(108,99,255,0.05);
+    }
+
+    .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .feature-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.85rem; color: #666; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+  <!-- Background blobs -->
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">💬 Textkro</div>
+    <div class="nav-links">
+      <a href="/signin" class="btn-nav btn-outline">Login</a>
+      <a href="/signup" class="btn-nav btn-filled">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="badge">✨ Real-time Chat Rooms</div>
+    <h1>
+      Baat karo bina<br>
+      <span class="gradient">rukavat ke</span>
+    </h1>
+    <p class="subtitle">
+      Room banao, dosto ko invite karo, aur real-time mein chat karo. Simple, fast, aur secure.
+    </p>
+    <div class="hero-buttons">
+      <a href="/signup" class="btn-hero-primary"> Get Ready</a>
+      <a href="/signin" class="btn-hero-secondary">Login</a>
+    </div>
+  </div>
+
+  <!-- Chat Preview -->
+  <div class="chat-preview">
+    <div class="chat-header">
+      <div class="room-dot"></div>
+      <span class="room-name">Room: a3f9c12b • 3 online</span>
+    </div>
+
+    <div class="message msg-left">
+      <span class="msg-name">Sid</span>
+      <span class="msg-bubble">hey sab kaise ho? 👋</span>
+    </div>
+    <div class="message msg-right">
+      <span class="msg-name">Gaurav</span>
+      <span class="msg-bubble">bilkul mast! tum btao 😄</span>
+    </div>
+    <div class="message msg-left">
+      <span class="msg-name">Sid</span>
+      <span class="msg-bubble">f9 f9 chal chat karte hain 🔥</span>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-title">Instant</div>
+      <div class="feature-desc">Real-time messages bina delay ke</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <div class="feature-title">Secure</div>
+      <div class="feature-desc">Hashed passwords, safe sessions</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <div class="feature-title">Colorful</div>
+      <div class="feature-desc">Har user ka apna unique color</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚪</div>
+      <div class="feature-title">Rooms</div>
+      <div class="feature-desc">Private rooms banao ya join karo</div>
+    </div>
+  </div>
+
+</body>
+</html>

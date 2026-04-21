@@ -11,7 +11,9 @@
 
   <input type="text" id="message" placeholder="Type message..." />
   <button id="sendBtn">Send</button>
-
+  <a href="/dashboard">
+  <button>Exit Room</button>
+</a>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
@@ -27,39 +29,67 @@
     socket.emit("join-room", { roomId, username });
 
     socket.on("previous-messages", (messages) => {
-      chatBox.innerHTML = "";
-      messages.forEach(msg => {
-        const p = document.createElement("p");
-        p.textContent = msg.text;
-        chatBox.appendChild(p);
-      });
-    });
+  chatBox.innerHTML = "";
+  messages.forEach(msg => {
+    const p = document.createElement("p");
+    const senderName = msg.sender?.username || "Unknown";
+    p.textContent = `${senderName}: ${msg.text}`;
+    p.style.backgroundColor = getUserColor(senderName);
+    p.style.padding = "5px 10px";
+    p.style.borderRadius = "8px";
+    p.style.margin = "4px 0";
+    chatBox.appendChild(p);
+  });
+  });
 
     socket.on("user-joined", (data) => {
-      const p = document.createElement("p");
-      p.textContent = data.message;
-      chatBox.appendChild(p);
-    });
+  const p = document.createElement("p");
+  p.textContent = data.message;
+  p.style.textAlign = "center";
+  p.style.color = "black";
+  p.style.fontSize = "15px";
+  p.style.fontStyle = "italic";
+  chatBox.appendChild(p);
+});
 
     socket.on("receive-message", (data) => {
-      const p = document.createElement("p");
-      p.textContent = `${data.username}: ${data.text}`;
-      chatBox.appendChild(p);
-    });
+  const p = document.createElement("p");
+  p.textContent = `${data.username}: ${data.text}`;
+  p.style.backgroundColor = getUserColor(data.username);
+  p.style.padding = "5px 10px";
+  p.style.borderRadius = "8px";
+  p.style.margin = "4px 0";
+  chatBox.appendChild(p);
+   });
 
     sendBtn.addEventListener("click", () => {
-      const text = messageInput.value.trim();
-      if (!text) return;
+  const text = messageInput.value.trim();
+  if (!text) return;
 
-      socket.emit("send-message", {
-        roomId,
-        userId,
-        username,
-        text
-      });
+  // const p = document.createElement("p");
+  // p.textContent = `${username}: ${text}`;
+  // p.style.backgroundColor = getUserColor(username);
+  // p.style.padding = "5px 10px";
+  // p.style.borderRadius = "8px";
+  // p.style.margin = "4px 0";
+  // chatBox.appendChild(p);
 
-      messageInput.value = "";
-    });
+  socket.emit("send-message", { roomId, userId, username, text });
+  messageInput.value = "";
+  });
+
+    function getUserColor(username) {
+  const colors = [
+    "#FFB3B3", "#B3D9FF", "#B3FFB3", "#FFD9B3",
+    "#E8B3FF", "#B3FFF0", "#FFF3B3", "#FFB3E6"
+  ];
+  let hash = 0;
+  for (let i = 0; i < username.length; i++) {
+    hash = username.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+   }
   </script>
+  
 </body>
 </html>
