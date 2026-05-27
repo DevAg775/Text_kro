@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.static(path.resolve("./public")))
 
 app.use(session({
-    secret: "secretkey",
+    secret: process.env.SESSION_SECRET || "secretkey",
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 }
@@ -78,5 +78,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
