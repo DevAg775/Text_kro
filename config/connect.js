@@ -5,7 +5,7 @@ try {
   await mongoose.connect(url);
   console.log("Mongodb connected")
 } catch (error) {
-  console.log("Mongo Err",err.message)
+  console.log("Mongo Err",error.message)
   process.exit(1)
 }
 }
